@@ -3,6 +3,35 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+## Introduction
+In this project I've implemented the Model Predictive Control to drive the car around the track. Calculated the cross track error through code and additionally, there's a 100 millisecond latency between actuations commands on top of the connection latency.Also used 70 as the reference velocity.
+
+This solution makes use of the IPOPT and CPPAD libraries to calculate an optimal trajectory and its associated actuation commands in order to minimize error with a third-degree polynomial fit to the given waypoints. The optimization considers only a short duration's worth of waypoints, and produces a trajectory for that duration based upon a model of the vehicle's kinematics and a cost function based mostly on the vehicle's cross-track error and orientation angle error, with other cost factors included to improve performance. Used solver to reduce the cost function using initial state, model, cost function and constraints to determine the vector of control inputs so as to minimise the cost function.
+
+For example, if we were to set N to 100, the simulation would run much slower. This is because the solver would have to optimize 4 times as many control inputs. Ipopt, the solver, permutes the control input values until it finds the lowest cost. If you were to open up Ipopt and plot the x and y values as the solver mutates them, the plot would look like a worm moving around trying to fit the shape of the reference trajectory.
+
+- **Polynomial Fitting and MPC Preprocessing:**
+Note: The yellow is a polynomial fitted to waypoints and the green line represents the x and y coordinates of the MPC trajectory.
+
+## Ipopt
+Ipopt is the tool we'll be using to optimize the control inputs [δ1,a1,...,δN−1,aN−1]. It's able to find locally optimal values (non-linear problem!) while keeping the constraints set directly to the actuators and the constraints defined by the vehicle model. Ipopt requires we give it the jacobians and hessians directly - it does not compute them for us. Hence, we need to either manually compute them or have a library do this for us. Luckily, there is a library called CppAD which does exactly this.
+## CppAD
+CppAD is a library we'll use for automatic differentiation. By using CppAD we don't have to manually compute derivatives, which is tedious and prone to error.
+
+In order to use CppAD effectively, we have to use its types instead of regular double or std::vector types.
+
+## Experiment
+- **Timestep Length and Elapsed Duration (N & dt)**
+The values chosen for N and dt are 10 and 0.1, respectively. This is as per the suggestion of Udacity's provided office hours for the project. These values mean that the optimizer is considering a one-second duration in which to determine a corrective trajectory.
+
+Polynomial Fitting and MPC Preprocessing: A polynomial is fitted to waypoints. If the student preprocesses waypoints, the vehicle state, and/or actuators prior to the MPC procedure it is described.
+
+Model Predictive Control with Latency: This Model Predictive Control  handles a 100 millisecond latency and provides details on how latency is dealt with.
+
+## Additional Cost
+- **Model Predictive Control with Latency**
+ In addition to the cost functions suggested in the lessons ( CTE, epsi, delta between velocity and a reference velocity, delta, acceleration change) an additional cost penalizing the combination of velocity and delta has been included.
+
 ## Dependencies
 
 * cmake >= 3.5
