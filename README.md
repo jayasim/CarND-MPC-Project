@@ -28,13 +28,13 @@ Polynomial Fitting and MPC Preprocessing: A polynomial is fitted to waypoints. I
 
 The waypoints are preprocessed by transforming them to the vehicle's perspective. This simplifies the process to fit a polynomial to the waypoints because the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero.
 
-Model Predictive Control with Latency: This Model Predictive Control  handles a 100 millisecond latency and provides details on how latency is dealt with.
 
 ## Additional Cost
-- **Model Predictive Control with Latency**
- In addition to the cost functions suggested in the lessons ( CTE, epsi, delta between velocity and a reference velocity, delta, acceleration change) an additional cost penalizing the combination of velocity and delta has been included.
+- **Model Predictive Control with 100 ms Latency**
+The original kinematic equations depend upon the actuations from the previous timestep, but with a delay of 100ms (which happens to be the timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this. 
+In addition to the cost functions suggested in the lessons ( CTE, epsi, delta between velocity and a reference velocity, delta, acceleration change) an additional cost penalizing the combination of velocity and delta has been included.
 
- ## Impmentation Details
+ ## Implementation Details
  The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Actuator outputs are acceleration and delta (steering angle). The model combines the state and actuations from the previous timestep with the current so that it can calculate the state for the current timestep based on mentioned equations.
 
 ### Model
