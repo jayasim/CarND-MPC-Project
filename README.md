@@ -32,6 +32,28 @@ Model Predictive Control with Latency: This Model Predictive Control  handles a 
 - **Model Predictive Control with Latency**
  In addition to the cost functions suggested in the lessons ( CTE, epsi, delta between velocity and a reference velocity, delta, acceleration change) an additional cost penalizing the combination of velocity and delta has been included.
 
+ ## Impmentation Details
+ The kinematic model includes the vehicle's x and y coordinates, orientation angle (psi), and velocity, as well as the cross-track error and psi error (epsi). Actuator outputs are acceleration and delta (steering angle). The model combines the state and actuations from the previous timestep with the current so that it can calculate the state for the current timestep based on mentioned equations.
+
+### Model
+![equations](./equations.jpg)
+
+### Calculating the cross track and orientation error
+
+- **fit a polynomial to the above x and y coordinates**
+auto coeffs = polyfit(ptsx, ptsy, 1);
+The x and y coordinates are contained in the ptsx and ptsy vectors. Since these are 2-element vectors a 1-degree polynomial (straight line) is sufficient.
+
+- **The cross track error is calculated by evaluating at polynomial at x (-1) and subtracting y**
+
+Recall orientation error is calculated as follows eψ=ψ−ψdes, where ψdes is can be calculated as 
+arctan(f​′(x)).
+
+f(x)=a0 + a1∗x
+f​′(x)=a1
+​​hence the solution double epsi = psi - atan(coeffs[1]);
+
+
 ## Dependencies
 
 * cmake >= 3.5
